@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alimentador de Pet</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>Alimentador de Pet</h1>
+
+  <button id="btnCompartimento1">Abrir Compartimento 1</button>
+  <button id="btnCompartimento2">Abrir Compartimento 2</button>
+
+  <div id="status"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvQp-7ofiLzJESGtFVao5yQQhSM3eNhEE",
+        authDomain: "projetofinal-db140.firebaseapp.com",
+        databaseURL: "https://projetofinal-db140-default-rtdb.firebaseio.com",
+        projectId: "projetofinal-db140",
+        storageBucket: "projetofinal-db140.firebasestorage.app",
+        messagingSenderId: "509156925136",
+        appId: "1:509156925136:web:d9436ada7200d785aa48d5"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const statusDiv = document.getElementById("status");
+
+    function abrirCompartimento(num) {
+      statusDiv.textContent = `Abrindo compartimento ${num}...`;
+
+      database.ref('compartimento' + num).set(true)
+        .then(() => {
+          statusDiv.textContent = `Compartimento ${num} aberto com sucesso!`;
+
+          setTimeout(() => {
+            database.ref('compartimento' + num).set(false);
+            statusDiv.textContent = "";
+          }, 10000);
+        })
+        .catch((error) => {
+          statusDiv.textContent = "Erro ao abrir o compartimento: " + error.message;
+        });
+    }
+
+    document.getElementById("btnCompartimento1").addEventListener("click", () => abrirCompartimento(1));
+    document.getElementById("btnCompartimento2").addEventListener("click", () => abrirCompartimento(2));
+  </script>
+</body>
+</html>
